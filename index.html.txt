@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Артём и Марина — Приглашение на свадьбу</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #4A3B32;
+      background-color: #F5F5DC;
+      overflow-x: hidden;
+    }
+
+    /* ===== БОЛЬШАЯ ПЛАШКА ВЫБОРА ГОСТЯ ===== */
+    .guest-selector {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      z-index: 100;
+      padding: 20px 16px 18px;
+      text-align: center;
+      border-bottom: 2px solid #C6B29A;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .guest-selector-label {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      color: #4A3B32;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .guest-selector-label span {
+      display: inline-block;
+      background: #556B2F;
+      color: #fff;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      vertical-align: middle;
+      margin-left: 8px;
+      letter-spacing: 0.03em;
+      font-weight: normal;
+    }
+
+    .guest-selector select {
+      width: 90%;
+      max-width: 420px;
+      font-size: 18px;
+      font-family: inherit;
+      padding: 14px 16px;
+      border: 2px solid #C6B29A;
+      border-radius: 8px;
+      background: #FDFBF7;
+      color: #4A3B32;
+      text-align: center;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A3B32' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 18px;
+      outline: none;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      margin-top: 135px;
+      background: url('https://static.mashagpt.ru/dl/mashagpt/jhgrhb5lw0sy5qopik5odjs4.webp') center/cover no-repeat;
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        margin-top: 155px;
+      }
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 16px;
+    }
+
+    .hero-guest {
+      font-size: 1.3rem;
+      font-style: italic;
+      letter-spacing: 0.1em;
+      opacity: 0.9;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      margin-top: 8px;
+    }
+
+    .hero-names {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      margin: 32px 0;
+    }
+
+    .hero-names span {
+      color: #C6B29A;
+      margin: 0 8px;
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 64px;
+      background: rgba(255,255,255,0.5);
+      margin: 24px auto;
+    }
+
+    .hero-date {
+      font-size: 1.75rem;
+      letter-spacing: 0.12em;
+    }
+
+    /* ===== ОБЩИЕ ===== */
+    section {
+      position: relative;
+    }
+
+    h2 {
+      font-weight: 300;
+    }
+
+    /* ===== WELCOME ===== */
+    .welcome {
+      padding: 80px 16px;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .welcome h2 {
+      font-size: 1.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .welcome p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    /* ===== LOCATION ===== */
+    .location {
+      padding: 96px 16px;
+      color: #fff;
+      text-align: center;
+      background: url('https://static.mashagpt.ru/dl/mashagpt/hb5akjigoj4o0mtywopqrtah.webp') center/cover no-repeat fixed;
+    }
+
+    .location::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+    }
+
+    .location-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .location h2 {
+      font-size: 2.25rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 64px;
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      text-align: left;
+      background: rgba(0,0,0,0.3);
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 640px) {
+      .location-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    .location-day h3 {
+      color: #C6B29A;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .location-day p {
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
+
+    .location-day .secret {
+      font-style: italic;
+      border-left: 2px solid #556B2F;
+      padding-left: 16px;
+      opacity: 0.9;
+    }
+
+    .location-day img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      margin-top: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ===== DRESS CODE ===== */
+    .dresscode {
+      padding: 96px 16px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .dresscode-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .dresscode h2 {
+      font-size: 2.25rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .dresscode > .dresscode-inner > p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 650px;
+      margin: 0 auto 48px;
+      color: #666;
+    }
+
+    .dresscode-palette {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 48px;
+      display: block;
+    }
+
+    .dresscode h3 {
+      font-size: 1.5rem;
+      font-weight: 300;
+      font-style: italic;
+      color: #556B2F;
+      margin-bottom: 32px;
+    }
+
+    .dresscode-gallery {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .dresscode-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+    }
+
+    .dresscode-gallery img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: opacity 0.2s;
+    }
+
+    @media (max-width: 640px) {
+      .dresscode-gallery img {
+        height: 180px;
+      }
+    }
+
+    .dresscode-gallery img:active {
+      opacity: 0.8;
+    }
+
+    /* ===== GIFTS ===== */
+    .gifts {
+      padding: 96px 16px;
+      color: #fff;
+      text-align: center;
+      background: url('https://static.mashagpt.ru/dl/mashagpt/wn5htjx5u1gd76t870mt94c7.webp') center/cover no-repeat fixed;
+    }
+
+    .gifts::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+    }
+
+    .gifts-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .gifts h2 {
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .gifts p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ddd;
+    }
+
+    /* ===== RSVP ===== */
+    .rsvp {
+      padding: 96px 16px;
+      background: #F5F5DC;
+      text-align: center;
+    }
+
+    .rsvp-box {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 48px 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .rsvp h2 {
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .rsvp p {
+      font-size: 1.05rem;
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .rsvp-btn {
+      display: block;
+      width: 100%;
+      background: #4A3B32;
+      color: #fff;
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 18px 24px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .rsvp-btn:active {
+      background: #556B2F;
+    }
+
+    .rsvp-note {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 32px 16px 24px;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: #999;
+      background: #fff;
+      border-top: 1px solid rgba(169,146,125,0.2);
+    }
+
+    /* ===== ИКОНКИ (эмодзи-замена) ===== */
+    .icon-heart {
+      display: block;
+      margin: 0 auto 24px;
+      width: 32px;
+      height: 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ПЛАШКА ВЫБОРА ГОСТЯ ===== -->
+  <div class="guest-selector">
+    <div class="guest-selector-label">
+      Выберите ваше приглашение <span>Нажмите ▼</span>
+    </div>
+    <select id="guestSelect" onchange="updateGuest()">
+      <option value="Дорогие гости">Дорогие гости</option>
+      <option value="Дорогая мама">Дорогая мама</option>
+      <option value="Дорогой папа">Дорогой папа</option>
+      <option value="Дорогие Ирина и Дмитрий">Дорогие Ирина и Дмитрий</option>
+      <option value="Дорогие Алия и Руслан">Дорогие Алия и Руслан</option>
+      <option value="Дорогие Алсу и Рафаиль">Дорогие Алсу и Рафаиль</option>
+      <option value="Дорогие Ильдар и Альбина">Дорогие Ильдар и Альбина</option>
+      <option value="Дорогая Бабуля">Дорогая Бабуля</option>
+      <option value="Дорогие Дарина и Михаил">Дорогие Дарина и Михаил</option>
+      <option value="Дорогая крестная">Дорогая крестная</option>
+      <option value="Дорогие Татьяна и Константин">Дорогие Татьяна и Константин</option>
+      <option value="Дорогие Елизавета и Артём">Дорогие Елизавета и Артём</option>
+      <option value="Дорогая Полина">Дорогая Полина</option>
+      <option value="Дорогой Дмитрий Анатольевич">Дорогой Дмитрий Анатольевич</option>
+      <option value="Дорогие Полина и Рустам">Дорогие Полина и Рустам</option>
+      <option value="Дорогие Ксения и Никита">Дорогие Ксения и Никита</option>
+    </select>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-guest" id="guestName">Дорогие гости,</p>
+      <p class="hero-sub">приглашаем разделить с нами этот день</p>
+
+      <h1 class="hero-names">
+        АРТЁМ <span>&amp;</span> МАРИНА
+      </h1>
+
+      <div class="hero-divider"></div>
+
+      <p class="hero-date">07 . 08 . 2026</p>
+    </div>
+  </section>
+
+  <!-- ===== ПРИГЛАШЕНИЕ ===== -->
+  <section class="welcome">
+    <svg class="icon-heart" viewBox="0 0 32 32" fill="none" stroke="#C6B29A" stroke-width="1.5" stroke-linecap="round">
+      <path d="M16 28S4 20 4 11a7 7 0 0 1 7-7 7.4 7.4 0 0 1 5 2.2A7.4 7.4 0 0 1 21 4a7 7 0 0 1 7 7c0 9-12 17-12 17z"/>
+    </svg>
+    <h2>Ждём вас</h2>
+    <p>
+      В нашей жизни предстоит очень важное и радостное событие — наша свадьба.
+      Мы будем счастливы, если этот знаменательный день вы проведёте вместе с нами.
+    </p>
+  </section>
+
+  <!-- ===== ЛОКАЦИЯ И ВРЕМЯ ===== -->
+  <section class="location">
+    <div class="location-inner">
+      <h2>Локация и Время</h2>
+
+      <div class="location-grid">
+
+        <div class="location-day">
+          <h3>День 1: 07.08.2026</h3>
+
+          <p>
+            <strong>«Лесной пир»</strong><br>
+            Центральная ул. 27Б, п. Рассвет
+          </p>
+
+          <p>Сбор гостей: 16:00</p>
+          <p>Церемония: 17:00</p>
+          <p>Банкет: 18:00–00:00</p>
+
+          <img src="https://static.mashagpt.ru/dl/mashagpt/qbj28l92ttp269c45hyt669i.webp" alt="Место проведения">
+        </div>
+
+        <div class="location-day">
+          <h3>День 2: 08.08.2026</h3>
+          <p class="secret">
+            Секретная локация! Место проведения второго дня мы с радостью сообщим вам прямо на свадьбе.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ДРЕСС-КОД ===== -->
+  <section class="dresscode">
+    <div class="dresscode-inner">
+      <h2>Дресс-код</h2>
+      <p>
+        Мы очень стараемся сделать наш праздник красивым и гармоничным.
+        Будем признательны, если при выборе нарядов вы поддержите цветовую гамму нашей свадьбы:
+        шоколадный, цвет латте, капучино, бежевый и вкрапления оливкового.
+      </p>
+
+      <img class="dresscode-palette" src="https://static.mashagpt.ru/dl/mashagpt/cuq7y1zry3mu6zdf2199vx5f.webp" alt="Цветовая палитра">
+
+      <h3>Вдохновение для ваших образов:</h3>
+
+      <div class="dresscode-gallery">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/l7iugx6m581aq5tj9x7nhebx.webp" alt="Вдохновение 1">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/yf8duucdihcngam0v2pskmkn.webp" alt="Вдохновение 2">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/ohoo5x6kzm32le238229f9xe.webp" alt="Вдохновение 3">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/o1icrqgqxvxi32bj4ec1g5ye.webp" alt="Вдохновение 4">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/cubdp1f8dyt868rc9f31d7k4.webp" alt="Вдохновение 5">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ПОДАРКИ ===== -->
+  <section class="gifts">
+    <div class="gifts-inner">
+      <h2>Пожелания</h2>
+      <p>
+        Мы будем рады вашим улыбкам и хорошему настроению!
+        <br><br>
+        Просим вас не дарить нам цветы, так как мы не успеем насладиться их красотой.
+        Вместо них будем очень рады, если вы подарите бутылочку вашего любимого вина для нашей будущей семейной винотеки или интересную книгу.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== RSVP ===== -->
+  <section class="rsvp">
+    <div class="rsvp-box">
+      <h2>RSVP</h2>
+      <p>Пожалуйста, подтвердите ваше присутствие до 1 июля 2026 года.</p>
+
+      <a class="rsvp-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdvse4ntDwt3zZC5dmhBgTS6fnc2EVH9KjrZB6Hfh3KnDxUiw/viewform?usp=publish-editor" target="_blank">
+        Подтвердить участие
+      </a>
+
+      <p class="rsvp-note">Вы будете перенаправлены в Google Форму</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    А &amp; М &nbsp;|&nbsp; 2026
+  </footer>
+
+  <script>
+    function updateGuest() {
+      const select = document.getElementById('guestSelect');
+      const guestName = document.getElementById('guestName');
+      guestName.textContent = select.value + ',';
+    }
+  </script>
+
+</body>
+</html>
