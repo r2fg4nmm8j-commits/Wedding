@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Артём и Марина — Приглашение на свадьбу</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #4A3B32;
+      background-color: #F5F5DC;
+      overflow-x: hidden;
+    }
+
+    .guest-selector {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(169, 146, 125, 0.3);
+    }
+
+    .guest-selector label {
+      color: #556B2F;
+      margin-right: 8px;
+    }
+
+    .guest-selector select {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #4A3B32;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 4px 8px;
+    }
+
+    section {
+      position: relative;
+    }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      background: url('https://static.mashagpt.ru/dl/mashagpt/jhgrhb5lw0sy5qopik5odjs4.webp') center/cover no-repeat;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 16px;
+    }
+
+    .hero-guest {
+      font-size: 1.25rem;
+      font-style: italic;
+      letter-spacing: 0.1em;
+      opacity: 0.9;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      margin-top: 8px;
+    }
+
+    .hero-names {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      margin: 32px 0;
+    }
+
+    .hero-names span {
+      color: #C6B29A;
+      margin: 0 8px;
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 64px;
+      background: rgba(255,255,255,0.5);
+      margin: 24px auto;
+    }
+
+    .hero-date {
+      font-size: 1.75rem;
+      letter-spacing: 0.12em;
+    }
+
+    /* Welcome */
+    .welcome {
+      padding: 80px 16px;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .welcome h2 {
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .welcome p {
+      font-size: 1.125rem;
+      line-height: 1.8;
+    }
+
+    /* Location */
+    .location {
+      padding: 96px 16px;
+      color: #fff;
+      text-align: center;
+      background: url('https://static.mashagpt.ru/dl/mashagpt/hb5akjigoj4o0mtywopqrtah.webp') center/cover no-repeat fixed;
+    }
+
+    .location::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+    }
+
+    .location-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .location h2 {
+      font-size: 2.25rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 64px;
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      text-align: left;
+      background: rgba(0,0,0,0.3);
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 640px) {
+      .location-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    .location-day h3 {
+      color: #C6B29A;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .location-day p {
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
+
+    .location-day .secret {
+      font-style: italic;
+      border-left: 2px solid #556B2F;
+      padding-left: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .location-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      margin-top: 24px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Dresscode */
+    .dresscode {
+      padding: 96px 16px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .dresscode-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .dresscode h2 {
+      font-size: 2.25rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .dresscode > .dresscode-inner > p {
+      font-size: 1.1rem;
+      max-width: 640px;
+      margin: 0 auto 48px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .palette-img {
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 48px;
+    }
+
+    .dresscode h3 {
+      font-size: 1.5rem;
+      font-weight: 300;
+      font-style: italic;
+      color: #556B2F;
+      margin-bottom: 32px;
+    }
+
+    .inspiration-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .inspiration-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .inspiration-grid img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: opacity 0.3s;
+    }
+
+    .inspiration-grid img:hover {
+      opacity: 0.85;
+    }
+
+    /* Gifts */
+    .gifts {
+      padding: 96px 16px;
+      color: #fff;
+      text-align: center;
+      background: url('https://static.mashagpt.ru/dl/mashagpt/wn5htjx5u1gd76t870mt94c7.webp') center/cover no-repeat fixed;
+    }
+
+    .gifts::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .gifts-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .gifts h2 {
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .gifts p {
+      font-size: 1.125rem;
+      line-height: 1.9;
+      color: #e5e5e5;
+    }
+
+    /* RSVP */
+    .rsvp {
+      padding: 96px 16px;
+      background: rgba(245, 245, 220, 0.3);
+      text-align: center;
+    }
+
+    .rsvp-box {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 48px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    @media (max-width: 640px) {
+      .rsvp-box {
+        padding: 32px 24px;
+      }
+    }
+
+    .rsvp h2 {
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .rsvp p {
+      color: #666;
+      margin-bottom: 32px;
+    }
+
+    .rsvp-form input {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid #e5e5e5;
+      background: #fafafa;
+      font-family: inherit;
+      font-size: 16px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .rsvp-form input:focus {
+      border-color: #C6B29A;
+    }
+
+    .rsvp-buttons {
+      display: flex;
+      gap: 16px;
+    }
+
+    @media (max-width: 400px) {
+      .rsvp-buttons {
+        flex-direction: column;
+      }
+    }
+
+    .btn-yes {
+      flex: 1;
+      padding: 16px;
+      background: #4A3B32;
+      color: #fff;
+      border: none;
+      font-family: inherit;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-yes:hover {
+      background: #556B2F;
+    }
+
+    .btn-no {
+      flex: 1;
+      padding: 16px;
+      background: transparent;
+      color: #4A3B32;
+      border: 1px solid #4A3B32;
+      font-family: inherit;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-no:hover {
+      background: #f5f5f5;
+    }
+
+    .rsvp-thanks {
+      padding: 16px;
+      background: rgba(85, 107, 47, 0.1);
+      color: #556B2F;
+      border: 1px solid rgba(85, 107, 47, 0.3);
+    }
+
+    /* Footer */
+    footer {
+      padding: 32px;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      color: rgba(74, 59, 50, 0.6);
+      background: #fff;
+      border-top: 1px solid rgba(169, 146, 125, 0.2);
+      padding-bottom: 80px;
+    }
+
+    @media (min-width: 768px) {
+      footer { padding-bottom: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="guest-selector">
+    <label>Приглашение для:</label>
+    <select id="guestSelect" onchange="updateGuest()">
+      <option value="Дорогие гости">Дорогие гости</option>
+      <option value="Дорогая мама">Дорогая мама</option>
+      <option value="Дорогой папа">Дорогой папа</option>
+      <option value="Дорогие Ирина и Дмитрий">Дорогие Ирина и Дмитрий</option>
+      <option value="Дорогие Алия и Руслан">Дорогие Алия и Руслан</option>
+      <option value="Дорогие Алсу и Рафаиль">Дорогие Алсу и Рафаиль</option>
+      <option value="Дорогие Ильдар и Альбина">Дорогие Ильдар и Альбина</option>
+      <option value="Дорогая Бабуля">Дорогая Бабуля</option>
+      <option value="Дорогие Дарина и Михаил">Дорогие Дарина и Михаил</option>
+      <option value="Дорогая крестная">Дорогая крестная</option>
+      <option value="Дорогие Татьяна и Константин">Дорогие Татьяна и Константин</option>
+      <option value="Дорогие Елизавета и Артём">Дорогие Елизавета и Артём</option>
+      <option value="Дорогая Полина">Дорогая Полина</option>
+      <option value="Дорогой Дмитрий Анатольевич">Дорогой Дмитрий Анатольевич</option>
+      <option value="Дорогие Полина и Рустам">Дорогие Полина и Рустам</option>
+    </select>
+  </div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-guest" id="guestName">Дорогие гости,</p>
+      <p class="hero-sub">приглашаем разделить с нами этот день</p>
+      <h1 class="hero-names">АРТЁМ <span>&</span> МАРИНА</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-date">07 . 08 . 2026</p>
+    </div>
+  </section>
+
+  <section class="welcome">
+    <h2>Ждём вас</h2>
+    <p>В нашей жизни предстоит очень важное и радостное событие — наша свадьба. Мы будем счастливы, если этот знаменательный день вы проведёте вместе с нами.</p>
+  </section>
+
+  <section class="location">
+    <div class="location-inner">
+      <h2>Локация и Время</h2>
+      <div class="location-grid">
+        <div class="location-day">
+          <h3>День 1: 07.08.2026</h3>
+          <p><strong>«Лесной пир»</strong><br>Центральная ул. 27Б, п. Рассвет</p>
+          <p>Сбор гостей: 16:00</p>
+          <p>Церемония: 17:00</p>
+          <p>Банкет: 18:00–00:00</p>
+          <img src="https://static.mashagpt.ru/dl/mashagpt/qbj28l92ttp269c45hyt669i.webp" alt="Место проведения" class="location-img">
+        </div>
+        <div class="location-day">
+          <h3>День 2: 08.08.2026</h3>
+          <p class="secret">Секретная локация! Место проведения второго дня мы с радостью сообщим вам прямо на свадьбе.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dresscode">
+    <div class="dresscode-inner">
+      <h2>Дресс-код</h2>
+      <p>Мы очень стараемся сделать наш праздник красивым и гармоничным. Будем признательны, если при выборе нарядов вы поддержите цветовую гамму нашей свадьбы: шоколадный, цвет латте, капучино, бежевый и вкрапления оливкового.</p>
+      <img src="https://static.mashagpt.ru/dl/mashagpt/cuq7y1zry3mu6zdf2199vx5f.webp" alt="Цветовая палитра" class="palette-img">
+      <h3>Вдохновение для ваших образов:</h3>
+      <div class="inspiration-grid">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/l7iugx6m581aq5tj9x7nhebx.webp" alt="Вдохновение 1">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/yf8duucdihcngam0v2pskmkn.webp" alt="Вдохновение 2">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/ohoo5x6kzm32le238229f9xe.webp" alt="Вдохновение 3">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/o1icrqgqxvxi32bj4ec1g5ye.webp" alt="Вдохновение 4">
+        <img src="https://static.mashagpt.ru/dl/mashagpt/cubdp1f8dyt868rc9f31d7k4.webp" alt="Вдохновение 5">
+      </div>
+    </div>
+  </section>
+
+  <section class="gifts">
+    <div class="gifts-inner">
+      <h2>Пожелания</h2>
+      <p>Мы будем рады вашим улыбкам и хорошему настроению!<br><br>Просим вас не дарить нам цветы, так как мы не успеем насладиться их красотой. Вместо них будем очень рады, если вы подарите бутылочку вашего любимого вина для нашей будущей семейной винотеки или интересную книгу.</p>
+    </div>
+  </section>
+
+  <section class="rsvp">
+    <div class="rsvp-box">
+      <h2>RSVP</h2>
+      <p>Пожалуйста, подтвердите ваше присутствие до 1 июля 2026 года.</p>
+      <div id="rsvpForm">
+        <form class="rsvp-form" onsubmit="submitRsvp(event)">
+          <input type="text" placeholder="Ваше имя и фамилия" required>
+          <div class="rsvp-buttons">
+            <button type="submit" class="btn-yes">Я буду</button>
+            <button type="submit" class="btn-no">Не смогу</button>
+          </div>
+        </form>
+      </div>
+      <div id="rsvpThanks" style="display:none;" class="rsvp-thanks">
+        Спасибо! Ваш ответ записан.
+      </div>
+    </div>
+  </section>
+
+  <footer>А & М | 2026</footer>
+
+  <script>
+    function updateGuest() {
+      const select = document.getElementById('guestSelect');
+      const nameSpan = document.getElementById('guestName');
+      nameSpan.textContent = select.value + ',';
+    }
+
+    function submitRsvp(e) {
+      e.preventDefault();
+      document.getElementById('rsvpForm').style.display = 'none';
+      document.getElementById('rsvpThanks').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
